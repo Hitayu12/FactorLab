@@ -17,7 +17,9 @@ class Experiment(Base):
     status: Mapped[str] = mapped_column(sa.String(16), nullable=False, index=True, default="queued")
     error_message: Mapped[str | None] = mapped_column(sa.Text, nullable=True)
 
-    data_version_id: Mapped[int | None] = mapped_column(sa.Integer, index=True, nullable=True)
+    data_version_id: Mapped[int | None] = mapped_column(
+        sa.Integer, sa.ForeignKey("data_versions.id", ondelete="SET NULL"), index=True, nullable=True
+    )
     git_commit: Mapped[str | None] = mapped_column(sa.String(64), nullable=True)
 
     created_at: Mapped[sa.DateTime] = mapped_column(sa.DateTime, server_default=sa.func.now(), nullable=False)

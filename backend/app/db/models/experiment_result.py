@@ -10,7 +10,13 @@ class ExperimentResult(Base):
     __tablename__ = "experiment_results"
 
     id: Mapped[int] = mapped_column(sa.Integer, primary_key=True)
-    experiment_id: Mapped[int] = mapped_column(sa.Integer, index=True, nullable=False, unique=True)
+    experiment_id: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.ForeignKey("experiments.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+        unique=True,
+    )
 
     freq: Mapped[str] = mapped_column(sa.String(16), nullable=False, default="monthly")
     returns_json: Mapped[dict] = mapped_column(sa.JSON, nullable=False, default=dict)

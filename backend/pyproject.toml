@@ -39,8 +39,6 @@ target-version = "py311"
 [tool.pytest.ini_options]
 testpaths = ["backend/app/tests"]
 
-[tool.hatch.build.targets.wheel]
-packages = ["app"]
 
 [tool.hatch.build.targets.sdist]
 include = [

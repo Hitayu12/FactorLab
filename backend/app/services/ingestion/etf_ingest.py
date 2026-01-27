@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from io import StringIO
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 from urllib.error import URLError
 from urllib.request import urlopen
 
-import pandas as pd
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
@@ -15,12 +14,17 @@ from app.db.models import Asset, DataVersion, PriceDaily
 
 STOOQ_BASE_URL = "https://stooq.com/q/d/l/?s={symbol}&i=d"
 
+if TYPE_CHECKING:
+    import pandas as pd
+
 
 def _stooq_symbol(ticker: str) -> str:
     return f"{ticker.lower()}.us"
 
 
 def fetch_stooq_prices(ticker: str) -> pd.DataFrame | None:
+    import pandas as pd
+
     symbol = _stooq_symbol(ticker)
     url = STOOQ_BASE_URL.format(symbol=symbol)
     try:
@@ -34,6 +38,8 @@ def fetch_stooq_prices(ticker: str) -> pd.DataFrame | None:
 
 
 def _normalize_prices(df: pd.DataFrame) -> tuple[pd.DataFrame | None, str | None]:
+    import pandas as pd
+
     if df is None or df.empty:
         return None, None
 

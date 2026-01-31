@@ -2,6 +2,7 @@ from datetime import date
 
 import pandas as pd
 from sqlalchemy import create_engine, select
+from sqlalchemy.pool import StaticPool
 from sqlalchemy.orm import sessionmaker
 
 from app.db import models  # noqa: F401
@@ -11,7 +12,12 @@ from app.services.ingestion.etf_ingest import ingest_stooq_etf_prices
 
 
 def test_stooq_ingestion_creates_version_and_prices():
-    engine = create_engine("sqlite+pysqlite:///:memory:", future=True)
+    engine = create_engine(
+        "sqlite+pysqlite://",
+        future=True,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
     SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
     Base.metadata.create_all(engine)
 

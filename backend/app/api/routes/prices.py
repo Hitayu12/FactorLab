@@ -11,9 +11,12 @@ from app.services.ingestion.etf_ingest import ingest_stooq_etf_prices
 
 router = APIRouter()
 
+
 @router.get("/status")
 def prices_status(db: Session = Depends(db_session)):
-    latest_id = db.execute(select(DataVersion.id).order_by(DataVersion.id.desc()).limit(1)).scalar_one_or_none()
+    latest_id = db.execute(
+        select(DataVersion.id).order_by(DataVersion.id.desc()).limit(1)
+    ).scalar_one_or_none()
     if latest_id is None:
         raise HTTPException(status_code=404, detail="No data ingested yet")
 

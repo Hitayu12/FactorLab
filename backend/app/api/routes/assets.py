@@ -26,13 +26,20 @@ DEFAULT_ASSET_UNIVERSE: list[tuple[str, str]] = [
     ("VNQ", "REIT"),
 ]
 
+
 @router.get("")
 def list_assets(db: Session = Depends(db_session)):
     assets = db.execute(select(Asset).order_by(Asset.ticker)).scalars().all()
     return [
-        {"id": asset.id, "ticker": asset.ticker, "name": asset.name, "asset_class": asset.asset_class}
+        {
+            "id": asset.id,
+            "ticker": asset.ticker,
+            "name": asset.name,
+            "asset_class": asset.asset_class,
+        }
         for asset in assets
     ]
+
 
 @router.post("/seed")
 def seed_assets(db: Session = Depends(db_session)):

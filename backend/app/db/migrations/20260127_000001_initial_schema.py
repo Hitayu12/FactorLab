@@ -1,7 +1,7 @@
 """create initial schema
 
 Revision ID: 20260127_000001
-Revises: 
+Revises:
 Create Date: 2026-01-27 00:00:00.000000
 """
 
@@ -62,7 +62,9 @@ def upgrade() -> None:
     op.create_table(
         "prices_daily",
         sa.Column("id", sa.BigInteger(), primary_key=True),
-        sa.Column("asset_id", sa.Integer(), sa.ForeignKey("assets.id", ondelete="CASCADE"), nullable=False),
+        sa.Column(
+            "asset_id", sa.Integer(), sa.ForeignKey("assets.id", ondelete="CASCADE"), nullable=False
+        ),
         sa.Column("date", sa.Date(), nullable=False),
         sa.Column("adj_close", sa.Float(), nullable=False),
         sa.Column(

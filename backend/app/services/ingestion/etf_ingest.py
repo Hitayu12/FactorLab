@@ -71,25 +71,19 @@ def _insert_prices(
         stmt = (
             pg_insert(PriceDaily)
             .values(rows)
-            .on_conflict_do_nothing(
-                index_elements=["asset_id", "date", "data_version_id"]
-            )
+            .on_conflict_do_nothing(index_elements=["asset_id", "date", "data_version_id"])
         )
     elif dialect == "sqlite":
         stmt = (
             sqlite_insert(PriceDaily)
             .values(rows)
-            .on_conflict_do_nothing(
-                index_elements=["asset_id", "date", "data_version_id"]
-            )
+            .on_conflict_do_nothing(index_elements=["asset_id", "date", "data_version_id"])
         )
     else:
         stmt = (
             pg_insert(PriceDaily)
             .values(rows)
-            .on_conflict_do_nothing(
-                index_elements=["asset_id", "date", "data_version_id"]
-            )
+            .on_conflict_do_nothing(index_elements=["asset_id", "date", "data_version_id"])
         )
 
     result = db.execute(stmt)

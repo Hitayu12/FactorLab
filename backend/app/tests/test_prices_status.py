@@ -2,6 +2,7 @@ from datetime import date
 
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
+from sqlalchemy.pool import StaticPool
 from sqlalchemy.orm import sessionmaker
 
 from app.api.deps import db_session
@@ -12,7 +13,12 @@ from app.main import app
 
 
 def test_prices_status_latest_coverage():
-    engine = create_engine("sqlite+pysqlite:///:memory:", future=True)
+    engine = create_engine(
+        "sqlite+pysqlite://",
+        future=True,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
     TestingSessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
     Base.metadata.create_all(engine)
 
@@ -39,6 +45,7 @@ def test_prices_status_latest_coverage():
             db.commit()
             db.refresh(dv1)
             db.refresh(dv2)
+            dv2_id = dv2.id
 
             prices = [
                 PriceDaily(
@@ -67,7 +74,7 @@ def test_prices_status_latest_coverage():
         resp = client.get("/prices/status")
         assert resp.status_code == 200
         data = resp.json()
-        assert data["data_version_id"] == dv2.id
+        assert data["data_version_id"] == dv2_id
         assert data["source"] == "stooq"
         assert len(data["coverage"]) == 2
 
